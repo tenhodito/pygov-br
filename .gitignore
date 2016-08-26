@@ -12,3 +12,5 @@ __pycache__/
 docs/_build/
 build/
 dist/
+
+src/pygov_br/__meta__.py
