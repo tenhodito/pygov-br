@@ -23,6 +23,10 @@ with open(os.path.join(dirname, 'src', project, '__meta__.py'), 'w') as F:
     F.write('__version__ = %r\n__author__ = %r\n' % (version, author))
 
 
+INSTALL_DEPS = [
+    'requests>=2.11.1',
+]
+
 setup(
     # Basic info
     name=name,
@@ -46,7 +50,7 @@ setup(
     # Packages and depencies
     package_dir={'': 'src'},
     packages=find_packages('src'),
-    install_requires=[],
+    install_requires=INSTALL_DEPS,
     extras_require={
         'dev': [
             'boilerplate',
