@@ -1,7 +1,6 @@
 from pygov_br.base import Client
 from pygov_br.camara_deputados.proposal import ProposalClient
 from xmldict import xml_to_dict
-from xml.etree.ElementTree import fromstring, ElementTree
 
 
 class LegislativeBodyClient(Client):
@@ -29,10 +28,3 @@ class LegislativeBodyClient(Client):
         )
         dict_response = xml_to_dict(xml_response, strict=False)
         return dict_response['proposicao']
-
-    def _xml_attributes_to_list(self, xml_string, xml_tag):
-        element_list = []
-        element_tree = ElementTree(fromstring(xml_string))
-        for element in element_tree.findall(xml_tag):
-            element_list.append(element.attrib)
-        return element_list

@@ -1,4 +1,5 @@
 from urllib.parse import urljoin
+from xml.etree.ElementTree import fromstring, ElementTree
 from pygov_br.exceptions import ClientError, ClientServerError
 import logging
 import requests
@@ -41,3 +42,10 @@ class Client(object):
                 raise ClientServerError(msg, response=response)
 
         return response.text
+
+    def _xml_attributes_to_list(self, xml_string, xml_tag):
+        element_list = []
+        element_tree = ElementTree(fromstring(xml_string))
+        for element in element_tree.findall(xml_tag):
+            element_list.append(element.attrib)
+        return element_list
