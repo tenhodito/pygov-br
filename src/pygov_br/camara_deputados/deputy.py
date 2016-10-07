@@ -12,12 +12,11 @@ class DeputyClient(Client):
     def all(self):
         """
         List all deputies acting on Câmara dos Deputados.
+        Returns a list of dictionaries containing the information about the
+        deputies.
 
         Parameters:
             None
-        Return:
-            Returns a list of dictionaries containing the information about
-            the deputies.
         """
         xml_response = self._get('ObterDeputados')
         dict_response = xml_to_dict(xml_response)
@@ -26,14 +25,12 @@ class DeputyClient(Client):
     def details(self, deputy_id, legislature=''):
         """
         List detailed information about a specific deputy.
+        Returns a list of dictionaries containing extra information about
+        the deputy. Each dictionary represents one legislative period.
 
         Parameters:
             [Mandatory] deputy_id: Integer
             [Optional] lesgislature: Integer
-        Return:
-            Returns a list of dictionaries containing extra information about
-            the deputy. Each dictionary represents one legislative period.
-
         """
         path = 'ObterDetalhesDeputado?ideCadastro={}&numLegislatura={}'
         xml_response = self._get(path.format(deputy_id, legislature))
@@ -43,12 +40,11 @@ class DeputyClient(Client):
     def parties(self):
         """
         List all parties with representation on Câmara dos Deputados.
+        Returns a list of dictionaries containing the information about the
+        parties.
 
         Parameters:
             None
-        Return:
-            Returns a list of dictionaries containing the information about
-            the parties.
         """
         xml_response = self._get('ObterPartidosCD')
         dict_response = xml_to_dict(xml_response)
@@ -57,14 +53,12 @@ class DeputyClient(Client):
     def parties_bloc(self, bloc_id='', legislature=''):
         """
         List all parties blocs or filtering by legislature and id.
+        Returns a list of dictionaries containing bloc information and a list
+        of parties that belongs to the bloc.
 
         Parameters:
             [Optional] bloc_id: Integer
             [Optional] legislature: Integer
-
-        Return:
-            Returns a list of dictionaries containing bloc information and a
-            list of parties that belongs to the bloc.
         """
         path = 'ObterPartidosBlocoCD?numLegislatura={}&idBloco={}'
         xml_response = self._get(path.format(legislature, bloc_id))
@@ -74,12 +68,11 @@ class DeputyClient(Client):
     def parliamentary_seats(self):
         """
         List all paliamentary seats.
+        Returns a list of dictionaries containing the information about
+        parliamentaries seats.
 
         Parameters:
             None
-        Return:
-            Returns a list of dictionaries containing the information about
-            parliamentaries seats.
         """
         xml_response = self._get('ObterLideresBancadas')
         return self._xml_attributes_to_list(xml_response, 'bancada')
@@ -87,13 +80,12 @@ class DeputyClient(Client):
     def parliamentary_seat_leaders(self, seat_initials):
         """
         List all leaders and vice-leaders of a specific paliamentary seat.
+        Returns a dictionary with two keys: 'lider' and 'vice_lider', where
+        'lider' is a dictionary and 'vice_lider' a list of dictionaries.
+        Both dictionaries contains deputies informations.
 
         Parameters:
             [Mandatory] seat_initials: String
-        Return:
-            Returns a dictionary with two keys: 'lider' and 'vice_lider', where
-            'lider' is a dictionary and 'vice_lider' a list of dictionaries.
-            Both dictionaries contains deputies informations.
         """
         xml_response = self._get('ObterLideresBancadas')
         element_tree = ElementTree(fromstring(xml_response))
