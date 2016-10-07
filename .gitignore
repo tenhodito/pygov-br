@@ -13,4 +13,11 @@ docs/_build/
 build/
 dist/
 
+# Python-boilerplate auto generated files
 src/pygov_br/__meta__.py
+
+# IDEs
+.idea/
+
+# Testing and temporary files
+.tox/
