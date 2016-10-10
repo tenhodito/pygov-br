@@ -33,7 +33,7 @@ class SessionClient(Client):
             party_initials, region
         ))
         xml_dict = xml_to_dict(xml_response)
-        return xml_dict['sessoesDiscursos']['sessao']
+        return self._safe(xml_dict['sessoesDiscursos']['sessao'])
 
     def frequency(self, session_date, legislature='', deputy_enrollment_id='',
                   party_initials='', region=''):
@@ -56,7 +56,7 @@ class SessionClient(Client):
             party_initials, region
         ))
         xml_dict = xml_to_dict(xml_response)
-        return xml_dict['dia']
+        return self._safe(xml_dict['dia'])
 
     def status(self):
         """
@@ -66,4 +66,6 @@ class SessionClient(Client):
             None
         """
         xml_response = self._get('ListarSituacoesReuniaoSessao')
-        return self._xml_attributes_to_list(xml_response, 'situacaoReuniao')
+        list_response = self._xml_attributes_to_list(xml_response,
+                                                     'situacaoReuniao')
+        return self._safe(list_response)

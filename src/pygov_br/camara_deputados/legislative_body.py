@@ -19,7 +19,8 @@ class LegislativeBodyClient(Client):
             None
         """
         xml_response = self._get('ObterOrgaos')
-        return self._xml_attributes_to_list(xml_response, 'orgao')
+        list_response = self._xml_attributes_to_list(xml_response, 'orgao')
+        return self._safe(list_response)
 
     def roles(self):
         """
@@ -30,7 +31,8 @@ class LegislativeBodyClient(Client):
             None
         """
         xml_response = self._get('ListarCargosOrgaosLegislativosCD')
-        return self._xml_attributes_to_list(xml_response, 'cargo')
+        list_response = self._xml_attributes_to_list(xml_response, 'cargo')
+        return self._safe(list_response)
 
     def members(self, legislative_body_id):
         """
@@ -45,7 +47,7 @@ class LegislativeBodyClient(Client):
         element_tree = ElementTree(fromstring(xml_response))
         members = element_tree.find('membros')
         dict_response = self._make_dict_from_tree(members)
-        return dict_response['membros']
+        return self._safe(dict_response['membros'])
 
     def schedule(self, legislative_body_id, intial_date='', final_date=''):
         """
@@ -60,7 +62,7 @@ class LegislativeBodyClient(Client):
         xml_response = self._get(path.format(legislative_body_id,
                                              intial_date, final_date))
         dict_response = xml_to_dict(xml_response)
-        return dict_response['pauta']['reuniao']
+        return self._safe(dict_response['pauta']['reuniao'])
 
     def types(self):
         """
@@ -71,4 +73,6 @@ class LegislativeBodyClient(Client):
             None
         """
         xml_response = self._get('ListarTiposOrgaos')
-        return self._xml_attributes_to_list(xml_response, 'tipoOrgao')
+        list_response = self._xml_attributes_to_list(xml_response, 'tipoOrgao')
+        return self._safe(list_response)
+

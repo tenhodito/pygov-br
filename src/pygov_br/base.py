@@ -1,6 +1,7 @@
 from urllib.parse import urljoin
 from xml.etree.ElementTree import fromstring, ElementTree
 from pygov_br.exceptions import ClientError, ClientServerError
+from datetime import datetime
 import logging
 import requests
 
@@ -73,3 +74,57 @@ class Client(object):
             return accum
 
         return internal_iter(element_tree, {})
+
+    def _safe(self, element):
+        if isinstance(element, list):
+            safe_element = self._safe_list(element)
+        elif isinstance(element, dict):
+            safe_element = self._safe_dict(element)
+        else:
+            safe_element = element
+        return safe_element
+
+    def _safe_dict(self, dictionary):
+        for key in dictionary.keys():
+            if self._is_digit(dictionary[key]):
+                dictionary[key] = int(dictionary[key])
+            elif self._is_float(dictionary[key]):
+                dictionary[key] = float(dictionary[key])
+            elif isinstance(dictionary[key], dict):
+                dictionary[key] = self._safe_dict(dictionary[key])
+            elif isinstance(dictionary[key], list):
+                dictionary[key] = self._safe_list(dictionary[key])
+            else:
+                dictionary[key] = self._to_date_or_default(dictionary[key])
+
+        return dictionary
+
+    def _safe_list(self, data_list):
+        for index, element in enumerate(data_list):
+            data_list[index] = self._safe_dict(element)
+        return data_list
+
+    def _is_float(self, string):
+        try:
+            float(string)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+    def _is_digit(self, string):
+        try:
+            int(string)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+    def _to_date_or_default(self, string):
+        final_value = None
+        date_formats = ['%d/%m/%Y', '%d/%m/%Y %H:%M:%S']
+        for date_format in date_formats:
+            try:
+                final_value = datetime.strptime(string, date_format)
+                break
+            except:
+                final_value = string.strip() if string else None
+        return final_value
