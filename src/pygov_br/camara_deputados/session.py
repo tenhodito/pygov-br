@@ -1,7 +1,7 @@
 from pygov_br.base import Client
-from pygov_br.camara_deputados.proposal import ProposalClient
-from xml.etree.ElementTree import fromstring, ElementTree
+from base64 import b64decode
 from xmldict import xml_to_dict
+from datetime import datetime
 
 
 class SessionClient(Client):
@@ -18,13 +18,18 @@ class SessionClient(Client):
         Deputados in a specific period.
 
         Parameters:
-            [Mandatory] initial_date: String (dd/mm/yyy)
-            [Mandatory] final_date: String (dd/mm/yyy)
+            [Mandatory] initial_date: String (dd/mm/yyyy) or datetime
+            [Mandatory] final_date: String (dd/mm/yyyy) or datetime
             [Optional] session_id: Integer
             [Optional] parliamentary_name: String
             [Optional] party_initials: String
             [Optional] region: String
         """
+        if isinstance(initial_date, datetime):
+            initial_date = initial_date.strftime('%d/%m/%Y')
+        if isinstance(final_date, datetime):
+            final_date = final_date.strftime('%d/%m/%Y')
+
         path = "ListarDiscursosPlenario?dataIni={}&dataFim={}&" \
                "codigoSessao={}&parteNomeParlamentar={}&" \
                "siglaPartido={}&siglaUF={}"
@@ -35,6 +40,26 @@ class SessionClient(Client):
         xml_dict = xml_to_dict(xml_response)
         return self._safe(xml_dict['sessoesDiscursos']['sessao'])
 
+    def full_speech(self, session_id, speaker_number, quarter, insertion):
+        """
+        Returns the full content of a specified speech with the deputy
+        informations and datetime from the speech. All parameter can be caught
+        with the `speeches` method.
+
+        Parameters:
+            [Mandatory] session_id: String
+            [Mandatory] speaker_number: Integer
+            [Mandatory] quarter: Integer
+            [Mandatory] insertion: Integer
+        """
+        path = "obterInteiroTeorDiscursosPlenario?codSessao={}&numOrador={}&" \
+               "numQuarto={}&numInsercao={}"
+        xml_response = self._get(path.format(session_id, speaker_number,
+                                             quarter, insertion))
+        xml_dict = xml_to_dict(xml_response)['sessao']
+        xml_dict['discursoRTF'] = b64decode(xml_dict.pop('discursoRTFBase64'))
+        return self._safe(xml_dict)
+
     def frequency(self, session_date, legislature='', deputy_enrollment_id='',
                   party_initials='', region=''):
         """
@@ -43,12 +68,15 @@ class SessionClient(Client):
         frequency of parliamentarians in each session.
 
         Parameters:
-            [Mandatory] session_date: String (dd/mm/yyyy)
+            [Mandatory] session_date: String (dd/mm/yyyy) or datetime
             [Optional] legislature: Integer
             [Optional] deputy_enrollment_id: Integer
             [Optional] party_initials: String
             [Optional] region: String
         """
+        if isinstance(session_date, datetime):
+            session_date = session_date.strftime('%d/%m/%Y')
+
         path = "ListarPresencasDia?data={}&numLegislatura={}&" \
                "numMatriculaParlamentar={}&siglaPartido={}&siglaUF={}"
         xml_response = self._get(path.format(
