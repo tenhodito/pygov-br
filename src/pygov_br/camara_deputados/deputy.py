@@ -1,5 +1,6 @@
 from pygov_br.base import Client
 from xml.etree.ElementTree import fromstring, ElementTree
+from datetime import datetime
 from xmldict import xml_to_dict
 
 
@@ -95,3 +96,30 @@ class DeputyClient(Client):
         )
         dict_response = self._make_dict_from_tree(parliamentary_seat)
         return self._safe(dict_response['bancada'])
+
+    def frequency(self, initial_date, final_date, parliamentary_enrollment):
+        """
+        List the frequency of a parliamentary in a period.
+        Returns a list of sessions that occurred on the specified period and
+        the frequency of parliamentarians in each session.
+
+        Parameters:
+            [Mandatory] initial_date: String (dd/mm/yyyy) or datetime
+            [Mandatory] final_date: String (dd/mm/yyyy) or datetime
+            [Mandatory] parliamentary_enrollment: Integer
+        """
+        if isinstance(initial_date, datetime):
+            initial_date = initial_date.strftime('%d/%m/%Y')
+        if isinstance(final_date, datetime):
+            final_date = final_date.strftime('%d/%m/%Y')
+
+        path = "ListarPresencasParlamentar?dataIni={}&dataFim={}&" \
+               "numMatriculaParlamentar={}"
+        xml_response = self._get(
+            path.format(initial_date, final_date, parliamentary_enrollment),
+            host="http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/"
+        )
+        dict_response = xml_to_dict(xml_response)
+        return self._safe(
+            dict_response['parlamentar']['diasDeSessoes2']['dia']
+        )
