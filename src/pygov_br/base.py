@@ -57,7 +57,7 @@ class Client(object):
         return element_list
 
     def _tree_attributes_to_list(self, element_tree, parent):
-        elements = element_tree.find('Substitutivos')
+        elements = element_tree.find(parent)
         elements_list = []
         for child in elements.getchildren():
             elements_list.append(child.attrib)
