@@ -1,4 +1,20 @@
-You are seeing this description because the package owner is lazy and did not
-provide a detailed description for its project ;-)
+Pygov-br é uma lib que tem o objetivo de unificar as API's de dados abertos
+governamentais brasileiros. Atualmente, a pygov-br tem suporte para:
 
-Since you are here, please help with the pygov-br's documentation!
+* Webservices da Câmara dos Deputados
+
+Instalação
+----------
+
+::
+
+    pip install pygov-br
+
+Utilização
+----------
+
+::
+
+    from pygov_br.camara_deputados import cd
+    cd.deputies.all()
+
