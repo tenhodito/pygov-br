@@ -45,7 +45,7 @@ class Client(object):
             if 400 <= response.status_code < 500:
                 raise ClientError(msg, response=response)
             else:
-                raise ClientServerError(msg, response=response)
+                raise ClientServerError(msg + response.text, response=response)
 
         return response.text
 
