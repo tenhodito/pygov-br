@@ -3,14 +3,27 @@ from distutils.util import strtobool
 from xml.etree.ElementTree import fromstring, ElementTree
 from pygov_br.exceptions import ClientError, ClientServerError
 from datetime import datetime
+from inspect import isclass
 import logging
 import requests
 
 log = logging.getLogger('pygov_br.client')
 
 
+class ClientWrapper(object):
+    """Base class to client wrapper."""
+
+    def __init__(self, **kwargs):
+        for key in kwargs.keys():
+            if isclass(kwargs[key]):
+                value = kwargs[key]()
+            else:
+                value = kwargs[key]
+            setattr(self, key, value)
+
+
 class Client(object):
-    """Base class to interact with API"""
+    """Base class to interact with API."""
 
     def __init__(self, host, timeout=None):
         self.host = host
