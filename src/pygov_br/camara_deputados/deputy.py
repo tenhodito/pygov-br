@@ -129,7 +129,7 @@ class DeputyClient(Client):
                 Defaults to ''.
 
         Returns:
-            A list of dictionaries containing bloc information and a list
+            list: A list of dictionaries containing bloc information and a list
             of parties that belongs to the bloc. For example::
 
                 [{'Partidos': {'partido': [
@@ -154,7 +154,7 @@ class DeputyClient(Client):
         """Fetch all parliamentary seats.
 
         Returns:
-            A list of dictionaries containing the information about
+            list: A list of dictionaries containing the information about
             parliamentaries seats. For example::
 
                 [{'nome': 'Partido Social Liberal', 'sigla': 'PSL'}, ...]
@@ -172,7 +172,7 @@ class DeputyClient(Client):
             seat_initials (str): Parliamentary seat initials identifier.
 
         Returns:
-            A dictionary with two keys: 'lider' and 'vice_lider', where
+            dict: A dictionary with two keys: 'lider' and 'vice_lider', where
             'lider' is a dictionary and 'vice_lider' a list of dictionaries.
             Both dictionaries contains deputies informations. For example::
 
@@ -207,7 +207,7 @@ class DeputyClient(Client):
             parliamentary_enrollment (int): Parliamentary enrollment number.
 
         Returns:
-            A list of sessions that occurred on the specified period and
+            list: A list of sessions that occurred on the specified period and
             the frequency of parliamentarians in each session. For example::
 
                 [{'data': datetime.date(2012, 11, 20),
