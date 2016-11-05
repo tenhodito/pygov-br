@@ -12,18 +12,52 @@ class SessionClient(Client):
 
     def speeches(self, initial_date, final_date, session_id='',
                  parliamentary_name='', party_initials='', region=''):
-        """
-        List all speeches in a period.
-        Returns a list of deputies that made speeches on Plenary of Câmara dos
-        Deputados in a specific period.
+        """Fetch all speeches in a period.
 
-        Parameters:
-            [Mandatory] initial_date: String (dd/mm/yyyy) or datetime
-            [Mandatory] final_date: String (dd/mm/yyyy) or datetime
-            [Optional] session_id: Integer
-            [Optional] parliamentary_name: String
-            [Optional] party_initials: String
-            [Optional] region: String
+        Args:
+            initial_date (str or datetime): Initial date of period. If `str`,
+                must be in the format: `dd/mm/yyyy`.
+            final_date (str or datetime): Final date of period. If `str`,
+                must be in the format: `dd/mm/yyyy`.
+            session_id (int, optional): Session identifier. Defaults to ''.
+            parliamentary_name (str, optional): A parliamentary name. Defaults
+                to ''.
+            party_initials (str, optional): Party identifier initials. Defaults
+                to ''.
+            region (str, optional): Brazilian region identifier initials.
+                Defaults to ''.
+
+        Returns:
+            list: A list of sessions that contains speeches made by deputies on
+            Plenary of Câmara dos Deputados in a specific period. For example::
+
+                [{'codigo': '320.2.54.O',
+                  'data': datetime.date(2012, 11, 23),
+                  'fasesSessao': {'faseSessao': {'codigo': 'PE',
+                    'descricao': 'Pequeno Expediente',
+                    'discursos': {'discurso': [{
+                       'horaInicioDiscurso':
+                            datetime.datetime(2012, 11, 23, 9, 18),
+                       'numeroInsercao': 0,
+                       'numeroQuarto': 3,
+                       'orador': {'nome': 'MAURO BENEVIDES',
+                        'numero': 2,
+                        'partido': 'PMDB',
+                        'uf': 'CE'},
+                       'sumario': 'Presença da Presidenta Dilma Rousseff em ' \
+                                  'Fortaleza, Estado do Ceará, para a ' \
+                                  'inauguração do novo Estádio Castelão e da' \
+                                  'Zona de Processamento de Exportação - ZPE' \
+                                  'Liberação da área destinada à construção ' \
+                                  'da Refinaria Premium II no Estado pela '\
+                                  'PETROBRAS.',
+                       'txtIndexacao': 'ESTÁDIO, FUTEBOL, CIDADE, FORTALEZA,' \
+                                       'CE, INAUGURAÇÃO, PRESENÇA, DILMA ' \
+                                       'ROUSSEFF, PRESIDENTE DA REPÚBLICA, ' \
+                                       CONFIRMAÇÃO, APOIO.'},
+                  'numero': 2,
+                  'tipo': 'Ordinária - CD'}, ...]
+
         """
         if isinstance(initial_date, datetime):
             initial_date = initial_date.strftime('%d/%m/%Y')
@@ -41,16 +75,41 @@ class SessionClient(Client):
         return self._safe(xml_dict['sessoesDiscursos']['sessao'])
 
     def full_speech(self, session_id, speaker_number, quarter, insertion):
-        """
-        Returns the full content of a specified speech with the deputy
-        informations and datetime from the speech. All parameter can be caught
-        with the `speeches` method.
+        """Fetch full content of a speech.
 
-        Parameters:
-            [Mandatory] session_id: String
-            [Mandatory] speaker_number: Integer
-            [Mandatory] quarter: Integer
-            [Mandatory] insertion: Integer
+        All parameter can be caught with the `speeches` method.
+
+        Args:
+            session_id (str): Session identifier.
+            speaker_number (int): Speaker identifier.
+            quarter (int): Shorthand fraction number that identifies the
+                beginning of the speech.
+            insertion (int): Shorthand insertion number that identifies the
+                beginning of the speech.
+
+        Returns:
+            dict: The full content of a specified speech with the deputy
+            informations and datetime from the speech.
+
+            'DiscursoRTF' key is a byte string that contains the full speech in
+            Rich Text Format.
+
+            Example::
+
+                {'discursoRTF': b"{\\rtf1\\ansi\\ansicpg1252\\deff0" \
+                                 "\\deflang1046\\deflangfe1046\\deftab709" \
+                                 "{\\fonttbl{\\f0\\fswiss\\fprq2\\fcharset0 " \
+                                 "Arial;}}\r\n\\viewkind4\\uc1\\pard\\sl480" \
+                                 "\\slmult1\\qj\\f0\\fs24\\tab\\b O SR. " \
+                                 "DUDIMAR PAXIUBA \\b0 (PSDB-PA. Sem " \
+                                 "revis\\'e3o do orador.) - Sr. Presidente, "\
+                                 "Sras. e Srs. Parlamentares, ocupo esta " \
+                                 "tribuna para parabenizar a torcida " ... },
+                 'horaInicioDiscurso': datetime.datetime(2013, 3, 4, 14, 33),
+                 'nome': 'DUDIMAR PAXIUBA',
+                 'partido': 'PSDB',
+                 'uf': 'PA'}
+
         """
         path = "obterInteiroTeorDiscursosPlenario?codSessao={}&numOrador={}&" \
                "numQuarto={}&numInsercao={}"
@@ -62,17 +121,46 @@ class SessionClient(Client):
 
     def frequency(self, session_date, legislature='', deputy_enrollment_id='',
                   party_initials='', region=''):
-        """
-        List the parliamentary frequency on sessions in specific date.
-        Returns a list of sessions that occurred on the specified date and the
-        frequency of parliamentarians in each session.
+        """Fetch sessions ferquency.
 
-        Parameters:
-            [Mandatory] session_date: String (dd/mm/yyyy) or datetime
-            [Optional] legislature: Integer
-            [Optional] deputy_enrollment_id: Integer
-            [Optional] party_initials: String
-            [Optional] region: String
+        List the parliamentary frequency on sessions in specific date.
+
+        Args:
+            session_date (str or datetime): Initial date of period. If `str`,
+                must be in the format: `dd/mm/yyyy`.
+            lesgislature (int, optional): To specify an legislature. Defaults
+                to ''.
+            deputy_enrollment_id (int, optional): Deputy enrollment identifier.
+                Defaults to ''.
+            party_initials (str, optional): Party identifier initials. Defaults
+                to ''.
+            region (str, optional): Brazilian region identifier initials.
+                Defaults to ''.
+
+        Returns:
+            dict: Returns a dict with all session that occurred in the
+            specified date and the frequency of parliamentarians in each
+            session. For example::
+
+                {'data': datetime.date(2012, 4, 10),
+                 'legislatura': 54,
+                 'parlamentares': {'parlamentar': {'carteiraParlamentar': 1,
+                   'descricaoFrequenciaDia': 'Presença',
+                   'justificativa': None,
+                   'nomeParlamentar': 'Berinho Bantim-PSDB/RR',
+                   'presencaExterna': 0,
+                   'sessoesDia': {'sessaoDia': [{
+                      'descricao': 'ORDINÁRIA Nº 073 - 10/04/2012',
+                      'frequencia': 'Presença',
+                      'inicio': datetime.datetime(2012, 4, 10, 14, 0, 14)},
+                     {'descricao': 'EXTRAORDINÁRIA Nº 074 - 10/04/2012',
+                      'frequencia': 'Presença',
+                      'inicio': datetime.datetime(2012, 4, 10, 18, 46, 53)
+                      }, ...]},
+                   'siglaPartido': 'PSDB',
+                   'siglaUF': 'RR'}, ...},
+                 'qtdeSessoesDia': 2}
+
         """
         if isinstance(session_date, datetime):
             session_date = session_date.strftime('%d/%m/%Y')
@@ -87,11 +175,14 @@ class SessionClient(Client):
         return self._safe(xml_dict['dia'])
 
     def status(self):
-        """
-        Returns a list of possible situations for commissions and sessions.
+        """Fetch all status for comissions and sessions.
 
-        Parameters:
-            None
+        Returns:
+            list: A list of possible situations for commissions and sessions.
+            For example::
+
+                [{'descricao': 'Encerrada(Comunicado)', 'id': 9}, ...]
+
         """
         xml_response = self._get('ListarSituacoesReuniaoSessao')
         list_response = self._xml_attributes_to_list(xml_response,
