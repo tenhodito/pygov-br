@@ -32,15 +32,6 @@ class Client(object):
     def _get(self, path, **kwargs):
         return self._request('GET', path, kwargs)
 
-    def _put(self, path, **kwargs):
-        return self._request('PUT', path, kwargs)
-
-    def _post(self, path, **kwargs):
-        return self._request('POST', path, kwargs)
-
-    def _delete(self, path, **kwargs):
-        return self._request('DELETE', path, kwargs)
-
     def _request(self, verb, path, params):
         host = params.pop('host', None)
         if host:
@@ -106,29 +97,33 @@ class Client(object):
         elif isinstance(element, dict):
             safe_element = self._safe_dict(element)
         else:
-            safe_element = element
+            safe_element = self._safe_element(element)
         return safe_element
 
     def _safe_dict(self, dictionary):
         for key in dictionary.keys():
-            if self._is_digit(dictionary[key]):
-                dictionary[key] = int(dictionary[key])
-            elif self._is_float(dictionary[key]):
-                dictionary[key] = float(dictionary[key])
-            elif self._is_bool(dictionary[key]):
-                dictionary[key] = bool(strtobool(dictionary[key]))
-            elif isinstance(dictionary[key], dict):
-                dictionary[key] = self._safe_dict(dictionary[key])
-            elif isinstance(dictionary[key], list):
-                dictionary[key] = self._safe_list(dictionary[key])
-            else:
-                dictionary[key] = self._to_date_or_default(dictionary[key])
+            dictionary[key] = self._safe_element(dictionary[key])
 
         return dictionary
 
+    def _safe_element(self, element):
+        if self._is_digit(element):
+            safe_element = int(element)
+        elif self._is_float(element):
+            safe_element = float(element)
+        elif self._is_bool(element):
+            safe_element = bool(strtobool(element))
+        elif isinstance(element, dict):
+            safe_element = self._safe_dict(element)
+        elif isinstance(element, list):
+            safe_element = self._safe_list(element)
+        else:
+            safe_element = self._to_date_or_default(element)
+        return safe_element
+
     def _safe_list(self, data_list):
         for index, element in enumerate(data_list):
-            data_list[index] = self._safe_dict(element)
+            data_list[index] = self._safe_element(element)
         return data_list
 
     def _is_float(self, string):
@@ -159,6 +154,7 @@ class Client(object):
             '%d/%m/%Y %H:%M:%S': None,
             '%d/%m/%Y %H:%M': None,
             '%H:%M': 'time',
+            '%H:%M:%S': 'time'
         }
         for date_format in date_formats.keys():
             try:
