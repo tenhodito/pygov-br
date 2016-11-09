@@ -1,27 +1,26 @@
 language: python
-cache: pip
-sudo: false
 
-# Test environments
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.5-dev" # 3.5 development branch
+  - "3.6-dev" # 3.6 development branch
+
 matrix:
-  include:
-   - env: TOXENV=py27
-     python: 2.7
-   - env: TOXENV=py33
-     python: 3.3
-   - env: TOXENV=py34
-     python: 3.4
-   - env: TOXENV=py35
-     python: 3.5
+  allow_failures:
+    - python: "3.5-dev"
+    - python: "3.6-dev"
 
-# Package installation
 install:
-  - pip install tox coveralls
+  - pip install -e .[dev]
 
-# Run tests
 script:
-  tox
+  - py.test src/pygov_br/tests/ --cov --cov-report term-missing -v
+  - flake8 src/pygov_br/
 
-# Register code coverage in coveralls
 after_success:
-  coveralls
+  - coveralls

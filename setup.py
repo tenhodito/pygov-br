@@ -54,10 +54,13 @@ setup(
     install_requires=INSTALL_DEPS,
     extras_require={
         'dev': [
-            'boilerplate',
             'mock',
-            'invoke',
+            'responses',
             'pytest',
+            'pytest-cov',
+            'coveralls',
+            'flake8',
+            'manuel',
         ],
     },
 
