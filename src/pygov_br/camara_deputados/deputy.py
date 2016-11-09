@@ -1,7 +1,7 @@
 from pygov_br.base import Client
 from xml.etree.ElementTree import fromstring, ElementTree
-from datetime import datetime
 from xmldict import xml_to_dict
+import datetime
 
 
 class DeputyClient(Client):
@@ -219,9 +219,9 @@ class DeputyClient(Client):
                   'justificativa': None} ...]
 
         """
-        if isinstance(initial_date, datetime):
+        if isinstance(initial_date, (datetime.date, datetime.datetime)):
             initial_date = initial_date.strftime('%d/%m/%Y')
-        if isinstance(final_date, datetime):
+        if isinstance(final_date, (datetime.date, datetime.datetime)):
             final_date = final_date.strftime('%d/%m/%Y')
 
         path = "ListarPresencasParlamentar?dataIni={}&dataFim={}&" \
