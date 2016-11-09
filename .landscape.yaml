@@ -1,0 +1,11 @@
+doc-warnings: true
+strictness: veryhigh
+max-line-length: 80
+autodetect: true
+requirements:
+  - requirements.txt
+ignore-paths:
+  - docs
+  - build
+python-targets:
+  - 3
