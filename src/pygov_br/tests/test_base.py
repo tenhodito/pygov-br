@@ -155,6 +155,7 @@ def test_safe_bool_element():
     assert type(client._safe_element('true')) == bool
     assert type(client._safe_element('false')) == bool
 
+
 def test_safe_list_element():
     client = Client('http://mock.com/')
     assert type(client._safe_element([1, 2])) == list
