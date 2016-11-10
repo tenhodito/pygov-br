@@ -93,7 +93,7 @@ class DeputyClient(Client):
                   'ufRepresentacaoAtual': 'AL'}, ...]
 
         """
-        path = 'ObterDetalhesDeputado?ideCadastro={}&numLegislatura={}'
+        path = 'ObterDetalhesDeputado?ideCadastro={0}&numLegislatura={1}'
         xml_response = self._get(path.format(deputy_id, legislature))
         dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['Deputados']['Deputado'])
@@ -145,7 +145,7 @@ class DeputyClient(Client):
                   'siglaBloco': 'PR, PTdoB, PRP'}, ...]
 
         """
-        path = 'ObterPartidosBlocoCD?numLegislatura={}&idBloco={}'
+        path = 'ObterPartidosBlocoCD?numLegislatura={0}&idBloco={1}'
         xml_response = self._get(path.format(legislature, bloc_id))
         dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['blocos']['bloco'])
@@ -188,9 +188,16 @@ class DeputyClient(Client):
         """
         xml_response = self._get('ObterLideresBancadas')
         element_tree = ElementTree(fromstring(xml_response))
-        parliamentary_seat = element_tree.find(
-            "bancada[@sigla='{}']".format(seat_initials)
-        )
+        seats = element_tree.findall('bancada')
+
+        for seat in seats:
+            # This for can be substituted by the code below.
+            # parliamentary_seat = element_tree.find(
+            #     "bancada[@sigla='{0}']".format(seat_initials)
+            # )
+            # But to support python 2.6 we cant :(
+            if seat.attrib.get('sigla') == seat_initials:
+                parliamentary_seat = seat
         dict_response = self._make_dict_from_tree(parliamentary_seat)
         return self._safe(dict_response['bancada'])
 
@@ -224,8 +231,8 @@ class DeputyClient(Client):
         if isinstance(final_date, (datetime.date, datetime.datetime)):
             final_date = final_date.strftime('%d/%m/%Y')
 
-        path = "ListarPresencasParlamentar?dataIni={}&dataFim={}&" \
-               "numMatriculaParlamentar={}"
+        path = "ListarPresencasParlamentar?dataIni={0}&dataFim={1}&" \
+               "numMatriculaParlamentar={2}"
         xml_response = self._get(
             path.format(initial_date, final_date, parliamentary_enrollment),
             host="http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/"

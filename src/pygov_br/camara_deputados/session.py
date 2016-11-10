@@ -64,9 +64,9 @@ class SessionClient(Client):
         if isinstance(final_date, datetime):
             final_date = final_date.strftime('%d/%m/%Y')
 
-        path = "ListarDiscursosPlenario?dataIni={}&dataFim={}&" \
-               "codigoSessao={}&parteNomeParlamentar={}&" \
-               "siglaPartido={}&siglaUF={}"
+        path = "ListarDiscursosPlenario?dataIni={0}&dataFim={1}&" \
+               "codigoSessao={2}&parteNomeParlamentar={3}&" \
+               "siglaPartido={4}&siglaUF={5}"
         xml_response = self._get(path.format(
             initial_date, final_date, session_id, parliamentary_name,
             party_initials, region
@@ -111,8 +111,8 @@ class SessionClient(Client):
                  'uf': 'PA'}
 
         """
-        path = "obterInteiroTeorDiscursosPlenario?codSessao={}&numOrador={}&" \
-               "numQuarto={}&numInsercao={}"
+        path = "obterInteiroTeorDiscursosPlenario?codSessao={0}" \
+               "&numOrador={1}&numQuarto={2}&numInsercao={3}"
         xml_response = self._get(path.format(session_id, speaker_number,
                                              quarter, insertion))
         xml_dict = self._xml_to_dict(xml_response)['sessao']
@@ -165,8 +165,8 @@ class SessionClient(Client):
         if isinstance(session_date, datetime):
             session_date = session_date.strftime('%d/%m/%Y')
 
-        path = "ListarPresencasDia?data={}&numLegislatura={}&" \
-               "numMatriculaParlamentar={}&siglaPartido={}&siglaUF={}"
+        path = "ListarPresencasDia?data={0}&numLegislatura={1}&" \
+               "numMatriculaParlamentar={2}&siglaPartido={3}&siglaUF={4}"
         xml_response = self._get(path.format(
             session_date, legislature, deputy_enrollment_id,
             party_initials, region

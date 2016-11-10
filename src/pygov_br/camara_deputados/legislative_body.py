@@ -83,7 +83,7 @@ class LegislativeBodyClient(Client):
                        'uf': 'RS'}, ...]}
 
         """
-        path = 'ObterMembrosOrgao?IDOrgao={}'
+        path = 'ObterMembrosOrgao?IDOrgao={0}'
         xml_response = self._get(path.format(legislative_body_id))
         element_tree = ElementTree(fromstring(xml_response))
         members = element_tree.find('membros')
@@ -139,7 +139,7 @@ class LegislativeBodyClient(Client):
         if isinstance(final_date, datetime):
             final_date = final_date.strftime('%d/%m/%Y')
 
-        path = "ObterPauta?IDOrgao={}&datIni={}&datFim={}"
+        path = "ObterPauta?IDOrgao={0}&datIni={1}&datFim={2}"
         xml_response = self._get(path.format(legislative_body_id,
                                              initial_date, final_date))
         dict_response = self._xml_to_dict(xml_response)

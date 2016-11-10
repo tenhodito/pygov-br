@@ -112,11 +112,11 @@ class ProposalClient(Client):
         if isinstance(final_date, datetime):
             final_date = final_date.strftime('%d/%m/%Y')
 
-        path = "ListarProposicoes?sigla={}&numero={}&ano={}&" \
-               "datApresentacaoIni={}&datApresentacaoFim={}&" \
-               "parteNomeAutor={}&idTipoAutor={}&siglaPartidoAutor={}&" \
-               "siglaUFAutor={}&generoAutor={}&codEstado={}&" \
-               "codOrgaoEstado={}&emTramitacao={}"
+        path = "ListarProposicoes?sigla={0}&numero={1}&ano={2}&" \
+               "datApresentacaoIni={3}&datApresentacaoFim={4}&" \
+               "parteNomeAutor={5}&idTipoAutor={6}&siglaPartidoAutor={7}&" \
+               "siglaUFAutor={8}&generoAutor={9}&codEstado={10}&" \
+               "codOrgaoEstado={11}&emTramitacao={12}"
         xml_response = self._get(path.format(
             proposal_type, proposal_number, year, initial_date, final_date,
             author_name, author_type_id, author_party_initials, author_region,
@@ -170,7 +170,7 @@ class ProposalClient(Client):
                  'ufAutor': 'SP'}
 
         """
-        path = "ObterProposicao?tipo={}&numero={}&ano={}"
+        path = "ObterProposicao?tipo={0}&numero={1}&ano={2}"
         xml_response = self._get(path.format(proposal_type, proposal_number,
                                              year))
         element_tree = ElementTree(fromstring(xml_response))
@@ -220,7 +220,7 @@ class ProposalClient(Client):
                  'ufAutor': 'SP'}
 
         """
-        path = "ObterProposicaoPorID?IdProp={}"
+        path = "ObterProposicaoPorID?IdProp={0}"
         xml_response = self._get(path.format(proposal_id))
         element_tree = ElementTree(fromstring(xml_response))
         dict_response = self._make_dict_from_tree(element_tree.getroot())
@@ -254,7 +254,7 @@ class ProposalClient(Client):
                  }, ...]
 
         """
-        path = "ObterVotacaoProposicao?tipo={}&numero={}&ano={}"
+        path = "ObterVotacaoProposicao?tipo={0}&numero={1}&ano={2}"
         xml_response = self._get(path.format(proposal_type, proposal_number,
                                              year))
         element_tree = ElementTree(fromstring(xml_response))
@@ -292,7 +292,7 @@ class ProposalClient(Client):
                   'nomeProposicao': 'PL 4567/2016'}, ...]
 
         """
-        path = 'ListarProposicoesVotadasEmPlenario?ano={}&tipo={}'
+        path = 'ListarProposicoesVotadasEmPlenario?ano={0}&tipo={1}'
         xml_response = self._get(path.format(year, proposal_type))
         dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicoes']['proposicao'])
@@ -323,7 +323,7 @@ class ProposalClient(Client):
         if isinstance(final_date, datetime):
             final_date = final_date.strftime('%d/%m/%Y')
 
-        path = 'ListarProposicoesTramitadasNoPeriodo?dtInicio={}&dtFim={}'
+        path = 'ListarProposicoesTramitadasNoPeriodo?dtInicio={0}&dtFim={1}'
         xml_response = self._get(path.format(initial_date, final_date))
         dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicoes']['proposicao'])
@@ -377,8 +377,8 @@ class ProposalClient(Client):
         if isinstance(initial_date, datetime):
             initial_date = initial_date.strftime('%d/%m/%Y')
 
-        path = 'ObterAndamento?sigla={}&numero={}&ano={}&' \
-               'dataIni={}&codOrgao={}'
+        path = 'ObterAndamento?sigla={0}&numero={1}&ano={2}&' \
+               'dataIni={3}&codOrgao={4}'
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year,
                         initial_date, legislative_body_id),
@@ -401,7 +401,8 @@ class ProposalClient(Client):
                   'Descricao': 'EMC 2/2008 CSSF => PL 3962/2008'}, ...]
 
         """
-        path = 'ObterEmendasSubstitutivoRedacaoFinal?tipo={}&numero={}&ano={}'
+        path = 'ObterEmendasSubstitutivoRedacaoFinal?' \
+               'tipo={0}&numero={1}&ano={2}'
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
@@ -425,7 +426,8 @@ class ProposalClient(Client):
                   'Descricao': 'RDF 1 => PL 3962/2008''}, ...]
 
         """
-        path = 'ObterEmendasSubstitutivoRedacaoFinal?tipo={}&numero={}&ano={}'
+        path = 'ObterEmendasSubstitutivoRedacaoFinal?' \
+               'tipo={0}&numero={1}&ano={2}'
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
@@ -449,7 +451,8 @@ class ProposalClient(Client):
                   'Descricao': 'SBT 1 CTASP => PL 3962/2008'}]
 
         """
-        path = 'ObterEmendasSubstitutivoRedacaoFinal?tipo={}&numero={}&ano={}'
+        path = 'ObterEmendasSubstitutivoRedacaoFinal?' \
+               'tipo={0}&numero={1}&ano={2}'
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
@@ -485,7 +488,7 @@ class ProposalClient(Client):
                   'relator': 'Mendes Ribeiro Filho',
                   'tipoAnalise': 'Constitucionalidade'}, ...]
         """
-        path = 'ObterIntegraComissoesRelator?tipo={}&numero={}&ano={}'
+        path = 'ObterIntegraComissoesRelator?tipo={0}&numero={1}&ano={2}'
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')

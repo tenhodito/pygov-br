@@ -47,11 +47,11 @@ class Client(object):
 
         response = requests.request(verb, url, params=params,
                                     timeout=self.timeout)
-        log.debug('Response [{}]: {}'.format(response.status_code,
-                                             repr(response.text)))
+        log.debug('Response [{0}]: {1}'.format(response.status_code,
+                                               repr(response.text)))
 
         if not response.ok:
-            msg = "[{}]: {}".format(response.status_code, response.reason)
+            msg = "[{0}]: {1}".format(response.status_code, response.reason)
             if 400 <= response.status_code < 500:
                 raise ClientError(msg, response=response)
             else:
