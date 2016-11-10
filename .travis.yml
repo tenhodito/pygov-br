@@ -19,7 +19,6 @@ install:
 
 script:
   - py.test src/pygov_br/tests/ --cov --cov-report term-missing -v
-  - flake8 src/pygov_br/
-
+  - if [[ $TRAVIS_PYTHON_VERSION > 2.6 ]]; then flake8 src/pygov_br/ ; fi
 after_success:
   - coveralls
