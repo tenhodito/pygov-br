@@ -173,8 +173,7 @@ class ProposalClient(Client):
         path = "ObterProposicao?tipo={0}&numero={1}&ano={2}"
         xml_response = self._get(path.format(proposal_type, proposal_number,
                                              year))
-        element_tree = ElementTree(fromstring(xml_response))
-        dict_response = self._make_dict_from_tree(element_tree.getroot())
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicao'])
 
     def get_by_id(self, proposal_id):
@@ -222,8 +221,7 @@ class ProposalClient(Client):
         """
         path = "ObterProposicaoPorID?IdProp={0}"
         xml_response = self._get(path.format(proposal_id))
-        element_tree = ElementTree(fromstring(xml_response))
-        dict_response = self._make_dict_from_tree(element_tree.getroot())
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicao'])
 
     def voting(self, proposal_type, proposal_number, year):
@@ -257,7 +255,7 @@ class ProposalClient(Client):
         path = "ObterVotacaoProposicao?tipo={0}&numero={1}&ano={2}"
         xml_response = self._get(path.format(proposal_type, proposal_number,
                                              year))
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
 
         voting = element_tree.find('Votacoes')
         voting_list = []
@@ -406,7 +404,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'Emendas'))
@@ -431,7 +429,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'RedacoesFinais'))
@@ -456,7 +454,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'Substitutivos'))
@@ -492,7 +490,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
         dict_response = self._make_dict_from_tree(
             element_tree.find('comissoes')
         )

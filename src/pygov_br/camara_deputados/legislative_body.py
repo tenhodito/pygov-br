@@ -85,7 +85,7 @@ class LegislativeBodyClient(Client):
         """
         path = 'ObterMembrosOrgao?IDOrgao={0}'
         xml_response = self._get(path.format(legislative_body_id))
-        element_tree = ElementTree(fromstring(xml_response))
+        element_tree = ElementTree(fromstring(xml_response.encode('utf-8')))
         members = element_tree.find('membros')
         dict_response = self._make_dict_from_tree(members)
         return self._safe(dict_response['membros'])
