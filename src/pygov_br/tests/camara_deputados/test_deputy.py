@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pygov_br.camara_deputados import cd
 import datetime
 import responses
@@ -247,8 +248,8 @@ def test_deputy_frequency():
     </parlamentar>
     """
     expected_dict = {
-        'frequencianoDia': 'PresenÃ§a',
-        'sessoes': {'sessao': {'frequencia': 'PresenÃ§a'}},
+        'frequencianoDia': u'Presen\xc3\xa7a',
+        'sessoes': {'sessao': {'frequencia': u'Presen\xc3\xa7a'}},
     }
     responses.add(
         responses.GET,

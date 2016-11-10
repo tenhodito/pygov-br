@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 from pygov_br.base import Client
 from xml.etree.ElementTree import fromstring, ElementTree
-from xmldict import xml_to_dict
 import datetime
 
 
@@ -38,7 +38,7 @@ class DeputyClient(Client):
                              'bandep/146949.jpg'}, ...]
         """
         xml_response = self._get('ObterDeputados')
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['deputados']['deputado'])
 
     def details(self, deputy_id, legislature=''):
@@ -95,7 +95,7 @@ class DeputyClient(Client):
         """
         path = 'ObterDetalhesDeputado?ideCadastro={}&numLegislatura={}'
         xml_response = self._get(path.format(deputy_id, legislature))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['Deputados']['Deputado'])
 
     def parties(self):
@@ -115,7 +115,7 @@ class DeputyClient(Client):
 
         """
         xml_response = self._get('ObterPartidosCD')
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['partidos']['partido'])
 
     def parties_bloc(self, bloc_id='', legislature=''):
@@ -147,7 +147,7 @@ class DeputyClient(Client):
         """
         path = 'ObterPartidosBlocoCD?numLegislatura={}&idBloco={}'
         xml_response = self._get(path.format(legislature, bloc_id))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['blocos']['bloco'])
 
     def parliamentary_seats(self):
@@ -230,7 +230,7 @@ class DeputyClient(Client):
             path.format(initial_date, final_date, parliamentary_enrollment),
             host="http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/"
         )
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(
             dict_response['parlamentar']['diasDeSessoes2']['dia']
         )

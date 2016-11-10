@@ -1,4 +1,4 @@
-from urllib.parse import urljoin
+# -*- coding: utf-8 -*-
 from distutils.util import strtobool
 from xml.etree.ElementTree import fromstring, ElementTree
 from pygov_br.exceptions import ClientError, ClientServerError
@@ -6,6 +6,12 @@ from datetime import datetime
 from inspect import isclass
 import logging
 import requests
+import sys
+
+if sys.version_info < (3, 0):
+    from urlparse import urljoin
+else:
+    from urllib.parse import urljoin
 
 log = logging.getLogger('pygov_br.client')
 
@@ -55,7 +61,7 @@ class Client(object):
 
     def _xml_attributes_to_list(self, xml_string, xml_tag):
         element_list = []
-        element_tree = ElementTree(fromstring(xml_string))
+        element_tree = ElementTree(fromstring(xml_string.encode('utf-8')))
         for element in element_tree.findall(xml_tag):
             element_list.append(element.attrib)
         return element_list
@@ -66,6 +72,10 @@ class Client(object):
         for child in elements.getchildren():
             elements_list.append(child.attrib)
         return elements_list
+
+    def _xml_to_dict(self, xml_string):
+        etree = ElementTree(fromstring(xml_string.encode('utf-8')))
+        return self._make_dict_from_tree(etree.getroot())
 
     def _make_dict_from_tree(self, element_tree):
         def internal_iter(tree, accum):

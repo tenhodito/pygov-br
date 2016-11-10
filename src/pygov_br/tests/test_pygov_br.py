@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygov_br
 from pygov_br.camara_deputados.deputy import DeputyClient
 from pygov_br.camara_deputados.legislative_body import LegislativeBodyClient

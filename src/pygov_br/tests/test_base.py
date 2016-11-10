@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pygov_br.base import ClientWrapper, Client
 from pygov_br.exceptions import ClientError, ClientServerError
 from pygov_br.camara_deputados.deputy import DeputyClient

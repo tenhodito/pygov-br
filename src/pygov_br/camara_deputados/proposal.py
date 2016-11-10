@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 from pygov_br.base import Client
 from pygov_br.exceptions import MissingParameterError
-from xmldict import xml_to_dict
 from xml.etree.ElementTree import fromstring, ElementTree
 from datetime import datetime
 
@@ -122,7 +122,7 @@ class ProposalClient(Client):
             author_name, author_type_id, author_party_initials, author_region,
             author_gender, status_id, legislative_body_id, in_progress
         ))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicoes']['proposicao'])
 
     def get(self, proposal_type, proposal_number, year):
@@ -294,7 +294,7 @@ class ProposalClient(Client):
         """
         path = 'ListarProposicoesVotadasEmPlenario?ano={}&tipo={}'
         xml_response = self._get(path.format(year, proposal_type))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicoes']['proposicao'])
 
     def processed_in_period(self, initial_date, final_date):
@@ -325,7 +325,7 @@ class ProposalClient(Client):
 
         path = 'ListarProposicoesTramitadasNoPeriodo?dtInicio={}&dtFim={}'
         xml_response = self._get(path.format(initial_date, final_date))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicoes']['proposicao'])
 
     def progress(self, proposal_number, year, proposal_type='',
@@ -383,7 +383,7 @@ class ProposalClient(Client):
             path.format(proposal_type, proposal_number, year,
                         initial_date, legislative_body_id),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['proposicao'])
 
     def amendments(self, proposal_type, proposal_number, year):

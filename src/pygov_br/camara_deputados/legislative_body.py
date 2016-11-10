@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 from pygov_br.base import Client
 from datetime import datetime
 from xml.etree.ElementTree import fromstring, ElementTree
-from xmldict import xml_to_dict
 
 
 class LegislativeBodyClient(Client):
@@ -142,7 +142,7 @@ class LegislativeBodyClient(Client):
         path = "ObterPauta?IDOrgao={}&datIni={}&datFim={}"
         xml_response = self._get(path.format(legislative_body_id,
                                              initial_date, final_date))
-        dict_response = xml_to_dict(xml_response)
+        dict_response = self._xml_to_dict(xml_response)
         return self._safe(dict_response['pauta']['reuniao'])
 
     def types(self):

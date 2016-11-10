@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 from pygov_br.base import Client
 from base64 import b64decode
-from xmldict import xml_to_dict
 from datetime import datetime
 
 
@@ -71,7 +71,7 @@ class SessionClient(Client):
             initial_date, final_date, session_id, parliamentary_name,
             party_initials, region
         ))
-        xml_dict = xml_to_dict(xml_response)
+        xml_dict = self._xml_to_dict(xml_response)
         return self._safe(xml_dict['sessoesDiscursos']['sessao'])
 
     def full_speech(self, session_id, speaker_number, quarter, insertion):
@@ -115,7 +115,7 @@ class SessionClient(Client):
                "numQuarto={}&numInsercao={}"
         xml_response = self._get(path.format(session_id, speaker_number,
                                              quarter, insertion))
-        xml_dict = xml_to_dict(xml_response)['sessao']
+        xml_dict = self._xml_to_dict(xml_response)['sessao']
         xml_dict['discursoRTF'] = b64decode(xml_dict.pop('discursoRTFBase64'))
         return self._safe(xml_dict)
 
@@ -171,7 +171,7 @@ class SessionClient(Client):
             session_date, legislature, deputy_enrollment_id,
             party_initials, region
         ))
-        xml_dict = xml_to_dict(xml_response)
+        xml_dict = self._xml_to_dict(xml_response)
         return self._safe(xml_dict['dia'])
 
     def status(self):
