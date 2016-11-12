@@ -191,11 +191,7 @@ class DeputyClient(Client):
         seats = element_tree.findall('bancada')
 
         for seat in seats:
-            # This for can be substituted by the code below.
-            # parliamentary_seat = element_tree.find(
-            #     "bancada[@sigla='{0}']".format(seat_initials)
-            # )
-            # But to support python 2.6 we cant :(
+            # There is better ways to do this, but we want to support python2.6
             if seat.attrib.get('sigla') == seat_initials:
                 parliamentary_seat = seat
         dict_response = self._make_dict_from_tree(parliamentary_seat)

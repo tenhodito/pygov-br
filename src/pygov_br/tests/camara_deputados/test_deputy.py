@@ -214,6 +214,17 @@ def test_deputy_parliamentary_seat_leaders():
                 <ideCadastro>626651</ideCadastro>
             </vice_lider>
         </bancada>
+        <bancada sigla="Bloco PP" nome="Bloco Parlamentar PP">
+            <lider>
+                <ideCadastro>160527</ideCadastro>
+            </lider>
+            <vice_lider>
+                <ideCadastro>73666</ideCadastro>
+            </vice_lider>
+            <vice_lider>
+                <ideCadastro>626651</ideCadastro>
+            </vice_lider>
+        </bancada>
     </bancadas>
     """
     expected_dict = {
