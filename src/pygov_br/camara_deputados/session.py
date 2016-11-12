@@ -72,7 +72,14 @@ class SessionClient(Client):
             party_initials, region
         ))
         xml_dict = self._xml_to_dict(xml_response)
-        return self._safe(xml_dict['sessoesDiscursos']['sessao'])
+        xml_dict = xml_dict['sessoesDiscursos']['sessao']
+
+        if isinstance(xml_dict, dict):
+            return_list = [xml_dict]
+        else:
+            return_list = xml_dict
+
+        return self._safe(return_list)
 
     def full_speech(self, session_id, speaker_number, quarter, insertion):
         """Fetch full content of a speech.
