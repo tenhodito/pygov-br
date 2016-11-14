@@ -268,7 +268,7 @@ def test_proposals_voting():
         'votos': [{'Nome': 'Henrique Afonso', 'ideCadastro': 73940,
                    'Partido': 'PV', 'UF': 'AC', 'Voto': 'Sim'},
                   {'Nome': 'Carlos Souza', 'ideCadastro': 73934,
-                   'Partido': 'PSD', 'UF': 'AM', 'Voto': 'Sim'},]
+                   'Partido': 'PSD', 'UF': 'AM', 'Voto': 'Sim'}]
     }]
     responses.add(
         responses.GET,
