@@ -143,7 +143,12 @@ class LegislativeBodyClient(Client):
         xml_response = self._get(path.format(legislative_body_id,
                                              initial_date, final_date))
         dict_response = self._xml_to_dict(xml_response)
-        return self._safe(dict_response['pauta']['reuniao'])
+        list_response = dict_response['pauta']['reuniao']
+
+        if isinstance(list_response, dict):
+            list_response = [list_response]
+
+        return self._safe(list_response)
 
     def types(self):
         """Fetch all legislative bodies types.
