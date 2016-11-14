@@ -161,10 +161,10 @@ def test_deputy_parties_bloc():
         </bloco>
     </blocos>
     """
-    expected_list = {
+    expected_list = [{
         'nomeBloco': 'PV, PPS',
         'Partidos': {'partido': [{'idPartido': 'PPS'}, {'idPartido': 'PV'}]}
-    }
+    }]
     responses.add(
         responses.GET,
         'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/'
@@ -258,23 +258,23 @@ def test_deputy_frequency():
         </diasDeSessoes2>
     </parlamentar>
     """
-    expected_dict = {
+    expected_list = [{
         'frequencianoDia': u'Presen\xc3\xa7a',
         'sessoes': {'sessao': {'frequencia': u'Presen\xc3\xa7a'}},
-    }
+    }]
     responses.add(
         responses.GET,
         'http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/'
         'ListarPresencasParlamentar',
         body=xml_response, status=200)
     result_dict = cd.deputies.frequency('10/10/2010', '11/10/2010', 1)
-    assert result_dict == expected_dict
+    assert result_dict == expected_list
 
     result_dict = cd.deputies.frequency(
         datetime.date(2010, 10, 10), datetime.date(2010, 10, 11), 1)
-    assert result_dict == expected_dict
+    assert result_dict == expected_list
 
     result_dict = cd.deputies.frequency(
         datetime.datetime(2010, 10, 10), datetime.datetime(2010, 10, 11), 1)
-    assert result_dict == expected_dict
+    assert result_dict == expected_list
     assert len(responses.calls) == 3
