@@ -123,7 +123,11 @@ class ProposalClient(Client):
             author_gender, status_id, legislative_body_id, in_progress
         ))
         dict_response = self._xml_to_dict(xml_response)
-        return self._safe(dict_response['proposicoes']['proposicao'])
+        list_response = dict_response['proposicoes']['proposicao']
+        if isinstance(list_response, dict):
+            list_response = [list_response]
+
+        return self._safe(list_response)
 
     def get(self, proposal_type, proposal_number, year):
         r"""Fetch detailed proposal.
@@ -255,7 +259,7 @@ class ProposalClient(Client):
         path = "ObterVotacaoProposicao?tipo={0}&numero={1}&ano={2}"
         xml_response = self._get(path.format(proposal_type, proposal_number,
                                              year))
-        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
+        element_tree = ElementTree(fromstring(xml_response.encode('utf-8')))
 
         voting = element_tree.find('Votacoes')
         voting_list = []
@@ -293,7 +297,11 @@ class ProposalClient(Client):
         path = 'ListarProposicoesVotadasEmPlenario?ano={0}&tipo={1}'
         xml_response = self._get(path.format(year, proposal_type))
         dict_response = self._xml_to_dict(xml_response)
-        return self._safe(dict_response['proposicoes']['proposicao'])
+        list_response = dict_response['proposicoes']['proposicao']
+
+        if isinstance(list_response, dict):
+            list_response = [list_response]
+        return self._safe(list_response)
 
     def processed_in_period(self, initial_date, final_date):
         """Fetch all processed proposals in the period.
@@ -324,7 +332,11 @@ class ProposalClient(Client):
         path = 'ListarProposicoesTramitadasNoPeriodo?dtInicio={0}&dtFim={1}'
         xml_response = self._get(path.format(initial_date, final_date))
         dict_response = self._xml_to_dict(xml_response)
-        return self._safe(dict_response['proposicoes']['proposicao'])
+        list_response = dict_response['proposicoes']['proposicao']
+
+        if isinstance(list_response, dict):
+            list_response = [list_response]
+        return self._safe(list_response)
 
     def progress(self, proposal_number, year, proposal_type='',
                  initial_date='', legislative_body_id=''):
@@ -404,7 +416,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
+        element_tree = ElementTree(fromstring(xml_response.encode('utf-8')))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'Emendas'))
@@ -429,7 +441,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
+        element_tree = ElementTree(fromstring(xml_response))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'RedacoesFinais'))
@@ -454,7 +466,7 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
+        element_tree = ElementTree(fromstring(xml_response))
 
         return self._safe(self._tree_attributes_to_list(element_tree,
                                                         'Substitutivos'))
@@ -490,12 +502,15 @@ class ProposalClient(Client):
         xml_response = self._get(
             path.format(proposal_type, proposal_number, year),
             host='http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/')
-        element_tree = ElementTree(fromstring(xml_response.encoding('utf-8')))
+        element_tree = ElementTree(fromstring(xml_response.encode('utf-8')))
         dict_response = self._make_dict_from_tree(
             element_tree.find('comissoes')
         )
+        list_response = dict_response['comissoes']['comissao']
+        if isinstance(list_response, dict):
+            list_response = [list_response]
 
-        return self._safe(dict_response['comissoes']['comissao'])
+        return self._safe(list_response)
 
     def types(self):
         """Fetch all proposal types.
