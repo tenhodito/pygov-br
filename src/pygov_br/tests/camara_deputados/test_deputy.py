@@ -304,6 +304,7 @@ def test_deputy_parties_bloc_dict():
     assert cd.deputies.parties_bloc() == expected_list
     assert len(responses.calls) == 1
 
+
 @responses.activate
 def test_deputy_parliamentary_seats():
     xml_response = """
