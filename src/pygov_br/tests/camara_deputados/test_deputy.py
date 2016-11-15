@@ -39,6 +39,31 @@ def test_deputy_all():
 
 
 @responses.activate
+def test_deputy_all_dict():
+    xml_response = """
+    <deputados>
+        <deputado>
+            <ideCadastro>74784</ideCadastro>
+            <comissoes>
+                <titular/>
+                <suplente/>
+            </comissoes>
+        </deputado>
+    </deputados>
+    """
+    expected_list = [
+        {'ideCadastro': 74784,
+         'comissoes': {'titular': None, 'suplente': None}},
+    ]
+    responses.add(
+        responses.GET,
+        'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/ObterDeputados',
+        body=xml_response, status=200)
+    assert cd.deputies.all() == expected_list
+    assert len(responses.calls) == 1
+
+
+@responses.activate
 def test_deputy_details():
     xml_response = """
     <Deputados>
@@ -124,6 +149,57 @@ def test_deputy_details():
 
 
 @responses.activate
+def test_deputy_details_dict():
+    xml_response = """
+    <Deputados>
+        <Deputado>
+            <numLegislatura>53</numLegislatura>
+            <partidoAtual>
+                <sigla>PSD</sigla>
+            </partidoAtual>
+            <comissoes>
+                <comissao>
+                    <siglaComissao>CEREFPOL</siglaComissao>
+                </comissao>
+            </comissoes>
+            <cargosComissoes>
+                <cargoComissoes>
+                    <siglaComissao>MESA</siglaComissao>
+                </cargoComissoes>
+            </cargosComissoes>
+            <periodosExercicio>
+                <periodoExercicio>
+                    <siglaUFRepresentacao>RN</siglaUFRepresentacao>
+                </periodoExercicio>
+            </periodosExercicio>
+            <historicoLider>
+                <itemHistoricoLider>
+                    <idHistoricoLider>141428</idHistoricoLider>
+                </itemHistoricoLider>
+            </historicoLider>
+        </Deputado>
+    </Deputados>
+    """
+    expected_list = [
+        {'numLegislatura': 53,
+         'partidoAtual': {'sigla': 'PSD'},
+         'comissoes': {'comissao': {'siglaComissao': 'CEREFPOL'}},
+         'cargosComissoes': {'cargoComissoes': {'siglaComissao': 'MESA'}},
+         'periodosExercicio': {
+             'periodoExercicio': {'siglaUFRepresentacao': 'RN'}},
+         'historicoLider': {'itemHistoricoLider': {
+             'idHistoricoLider': 141428}}},
+    ]
+    responses.add(
+        responses.GET,
+        'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/'
+        'ObterDetalhesDeputado',
+        body=xml_response, status=200)
+    assert cd.deputies.details(141428) == expected_list
+    assert len(responses.calls) == 1
+
+
+@responses.activate
 def test_deputy_parties():
     xml_response = """
     <partidos>
@@ -136,6 +212,24 @@ def test_deputy_parties():
     </partidos>
     """
     expected_list = [{'idPartido': 'ADB'}, {'idPartido': 'AIB'}]
+    responses.add(
+        responses.GET,
+        'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/ObterPartidosCD',
+        body=xml_response, status=200)
+    assert cd.deputies.parties() == expected_list
+    assert len(responses.calls) == 1
+
+
+@responses.activate
+def test_deputy_parties_dict():
+    xml_response = """
+    <partidos>
+        <partido>
+            <idPartido>ADB</idPartido>
+        </partido>
+    </partidos>
+    """
+    expected_list = [{'idPartido': 'ADB'}]
     responses.add(
         responses.GET,
         'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/ObterPartidosCD',
@@ -173,6 +267,42 @@ def test_deputy_parties_bloc():
     assert cd.deputies.parties_bloc() == expected_list
     assert len(responses.calls) == 1
 
+
+@responses.activate
+def test_deputy_parties_bloc_dict():
+    xml_response = """
+    <blocos>
+        <bloco>
+            <nomeBloco>PV, PPS</nomeBloco>
+            <Partidos>
+                <partido>
+                    <idPartido>PPS</idPartido>
+                </partido>
+            </Partidos>
+        </bloco>
+        <bloco>
+            <nomeBloco>PV, PPS</nomeBloco>
+            <Partidos>
+                <partido>
+                    <idPartido>PPS</idPartido>
+                </partido>
+            </Partidos>
+        </bloco>
+    </blocos>
+    """
+    expected_list = [
+        {'nomeBloco': 'PV, PPS',
+         'Partidos': {'partido': {'idPartido': 'PPS'}}},
+        {'nomeBloco': 'PV, PPS',
+         'Partidos': {'partido': {'idPartido': 'PPS'}}}
+    ]
+    responses.add(
+        responses.GET,
+        'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/'
+        'ObterPartidosBlocoCD',
+        body=xml_response, status=200)
+    assert cd.deputies.parties_bloc() == expected_list
+    assert len(responses.calls) == 1
 
 @responses.activate
 def test_deputy_parliamentary_seats():
@@ -278,3 +408,45 @@ def test_deputy_frequency():
         datetime.datetime(2010, 10, 10), datetime.datetime(2010, 10, 11), 1)
     assert result_dict == expected_list
     assert len(responses.calls) == 3
+
+
+@responses.activate
+def test_deputy_frequency_dict():
+    xml_response = """
+    <parlamentar>
+        <legislatura>54</legislatura>
+        <diasDeSessoes2>
+            <dia>
+                <frequencianoDia>Presença</frequencianoDia>
+                <sessoes>
+                    <sessao>
+                        <frequencia>Presença</frequencia>
+                    </sessao>
+                </sessoes>
+            </dia>
+            <dia>
+                <frequencianoDia>Presença</frequencianoDia>
+                <sessoes>
+                    <sessao>
+                        <frequencia>Presença</frequencia>
+                    </sessao>
+                </sessoes>
+            </dia>
+        </diasDeSessoes2>
+    </parlamentar>
+    """
+    expected_list = [
+        {'frequencianoDia': u'Presen\xc3\xa7a',
+         'sessoes': {'sessao': {'frequencia': u'Presen\xc3\xa7a'}}},
+        {'frequencianoDia': u'Presen\xc3\xa7a',
+         'sessoes': {'sessao': {'frequencia': u'Presen\xc3\xa7a'}}}
+    ]
+    responses.add(
+        responses.GET,
+        'http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/'
+        'ListarPresencasParlamentar',
+        body=xml_response, status=200)
+    result_dict = cd.deputies.frequency('10/10/2010', '11/10/2010', 1)
+    assert result_dict == expected_list
+
+    assert len(responses.calls) == 1
