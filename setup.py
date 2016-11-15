@@ -7,6 +7,7 @@
 #
 
 import os
+import sys
 from setuptools import setup, find_packages
 
 
@@ -22,11 +23,12 @@ dirname = os.path.dirname(__file__)
 with open(os.path.join(dirname, 'src', project, '__meta__.py'), 'w') as F:
     F.write('__version__ = %r\n__author__ = %r\n' % (version, author))
 
-
 INSTALL_DEPS = [
     'requests>=2.11.1',
-    'xmldict>=0.4.1'
 ]
+
+if sys.version_info < (2, 7):
+    INSTALL_DEPS.append('importlib')
 
 setup(
     # Basic info
@@ -54,10 +56,13 @@ setup(
     install_requires=INSTALL_DEPS,
     extras_require={
         'dev': [
-            'boilerplate',
             'mock',
-            'invoke',
+            'responses',
             'pytest',
+            'pytest-cov',
+            'coveralls',
+            'flake8',
+            'manuel',
         ],
     },
 

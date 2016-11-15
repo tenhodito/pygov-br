@@ -1,5 +1,4 @@
 import argparse
-import pygov_br
 from pygov_br import __version__
 
 
@@ -12,6 +11,7 @@ def get_parser():
     parser.add_argument('--version', '-v', action='version',
                         version='%(prog)s ' + __version__)
     return parser
+
 
 def main(args=None):
     """Main entry point for your project.
