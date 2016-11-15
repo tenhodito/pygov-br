@@ -8,9 +8,9 @@ import logging
 import requests
 import sys
 
-if sys.version_info < (3, 0):
+if sys.version_info < (3, 0):  # pragma: no cover
     from urlparse import urljoin
-else:
+else:  # pragma: no cover
     from urllib.parse import urljoin
 
 log = logging.getLogger('pygov_br.client')

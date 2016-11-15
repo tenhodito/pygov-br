@@ -45,5 +45,5 @@ def make_manuel_suite(ns):
 
 try:
     make_manuel_suite(globals())
-except OSError:
+except OSError:  # pragma: no cover
     print('Documentation files not found: disabling tests!')
