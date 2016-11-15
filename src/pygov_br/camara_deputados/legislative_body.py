@@ -162,4 +162,3 @@ class LegislativeBodyClient(Client):
         xml_response = self._get('ListarTiposOrgaos')
         list_response = self._xml_attributes_to_list(xml_response, 'tipoOrgao')
         return self._safe(list_response)
-
