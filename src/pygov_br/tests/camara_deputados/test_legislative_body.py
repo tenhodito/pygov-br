@@ -128,6 +128,37 @@ def test_legislative_body_schedule():
 
 
 @responses.activate
+def test_legislative_body_schedule_dict():
+    xml_response = """
+    <pauta orgao="CDC" dataInicial="01/01/2012" dataFinal="30/04/2012">
+        <reuniao>
+            <comissao>CDC</comissao>
+            <proposicoes>
+                <proposicao>
+                    <sigla>PL 1762/2011</sigla>
+                </proposicao>
+                <proposicao>
+                    <sigla>PL 1390/2012</sigla>
+                </proposicao>
+            </proposicoes>
+        </reuniao>
+    </pauta>
+    """
+    expected_list = [
+        {'comissao': 'CDC',
+         'proposicoes': {'proposicao': [{'sigla': 'PL 1762/2011'},
+                                        {'sigla': 'PL 1390/2012'}]}}
+    ]
+    responses.add(
+        responses.GET,
+        'http://www.camara.leg.br/SitCamaraWS/Orgaos.asmx/ObterPauta',
+        body=xml_response, status=200)
+    result_list = cd.legislative_bodies.schedule(1, '10/10/2010', '10/10/2010')
+    assert result_list == expected_list
+    assert len(responses.calls) == 1
+
+
+@responses.activate
 def test_legislative_body_schedule_with_datetime():
     xml_response = """
     <pauta orgao="CDC" dataInicial="01/01/2012" dataFinal="30/04/2012">
