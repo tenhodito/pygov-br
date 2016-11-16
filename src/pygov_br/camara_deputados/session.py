@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from pygov_br.base import Client
+from pygov_br.vendor.pyth.plugins.rtf15.reader import Rtf15Reader
+from pygov_br.vendor.pyth.plugins.xhtml.writer import XHTMLWriter
 from base64 import b64decode
 from datetime import datetime
+from bs4 import BeautifulSoup
+from tempfile import TemporaryFile
 
 
 class SessionClient(Client):
@@ -121,8 +125,17 @@ class SessionClient(Client):
         xml_response = self._get(path.format(session_id, speaker_number,
                                              quarter, insertion))
         xml_dict = self._xml_to_dict(xml_response)['sessao']
-        xml_dict['discursoRTF'] = b64decode(xml_dict.pop('discursoRTFBase64'))
+        speech = b64decode(xml_dict.pop('discursoRTFBase64'))
+        xml_dict['discurso'] = self._extract_text_from_rtf(speech)
         return self._safe(xml_dict)
+
+    def _extract_text_from_rtf(self, rtf_text):
+        temp_file = TemporaryFile()
+        temp_file.write(rtf_text)
+        doc = Rtf15Reader.read(temp_file)
+        html = XHTMLWriter.write(doc, pretty=True).read()
+        cleantext = BeautifulSoup(html, "html.parser").text.strip()
+        return cleantext
 
     def frequency(self, session_date, legislature='', deputy_enrollment_id='',
                   party_initials='', region=''):

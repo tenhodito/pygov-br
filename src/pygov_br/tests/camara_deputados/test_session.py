@@ -132,12 +132,14 @@ def test_session_full_speech():
     <sessao>
         <nome>DUDIMAR PAXIUBA</nome>
         <discursoRTFBase64>
-            dGVzdCBlbmNvZGVkIHN0cmluZw==
+            e1xydGYxXGFuc2lcZGVmZjANCntcY29sb3J0Ymw7XHJlZDBcZ3JlZW4wXGJsdWU
+            wO1xyZWQyNTVcZ3JlZW4wXGJsdWUwO30NClRoaXMgbGluZSBpcyB0aGUgZGVmYX
+            VsdCBjb2xvclxsaW5lfQ==
         </discursoRTFBase64>
     </sessao>
     """
     expected_dict = {'nome': 'DUDIMAR PAXIUBA',
-                     'discursoRTF': b'test encoded string'}
+                     'discurso': 'This line is the default color'}
     responses.add(
         responses.GET,
         'http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/'
