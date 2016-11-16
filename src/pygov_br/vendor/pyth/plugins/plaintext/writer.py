@@ -3,8 +3,8 @@ Render documents as plaintext.
 """
 from __future__ import absolute_import
 
-from pyth import document
-from pyth.format import PythWriter
+from pygov_br.vendor.pyth import document
+from pygov_br.vendor.pyth.format import PythWriter
 
 from io import StringIO
 
@@ -50,7 +50,7 @@ class PlaintextWriter(PythWriter):
         for text in paragraph.content:
             content.append(u"".join(text.content))
         content = u"".join(content).encode(self.encoding)
-            
+
         for line in content.splitlines():
             self.target.write("  ".encode(self.encoding) * self.indent)
             self.target.write(prefix.encode(self.encoding))
@@ -61,7 +61,7 @@ class PlaintextWriter(PythWriter):
 
     def list(self, list, prefix=None):
         self.indent += 1
-        for (i, entry) in enumerate(list.content):           
+        for (i, entry) in enumerate(list.content):
             for (j, paragraph) in enumerate(entry.content):
                 prefix = "* " if j == 0 else "  "
                 handler = self.paragraphDispatch[paragraph.__class__]
@@ -71,4 +71,4 @@ class PlaintextWriter(PythWriter):
 
 
 
-            
+

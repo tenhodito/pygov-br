@@ -5,9 +5,9 @@ from __future__ import absolute_import
 
 import BeautifulSoup
 
-from pyth import document
-from pyth.format import PythReader
-from pyth.plugins.xhtml.css import CSS
+from pygov_br.vendor.pyth import document
+from pygov_br.vendor.pyth.format import PythReader
+from pygov_br.vendor.pyth.plugins.xhtml.css import CSS
 import six
 
 

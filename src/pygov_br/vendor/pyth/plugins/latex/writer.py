@@ -9,9 +9,9 @@ from __future__ import absolute_import
 from cStringIO import StringIO
 import docutils.core
 
-from pyth import document
-from pyth.format import PythWriter
-from pyth.plugins.rst.writer import RSTWriter
+from pygov_br.vendor.pyth import document
+from pygov_br.vendor.pyth.format import PythWriter
+from pygov_br.vendor.pyth.plugins.rst.writer import RSTWriter
 
 
 class LatexWriter(PythWriter):

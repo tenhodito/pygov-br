@@ -15,9 +15,9 @@ Python-related constants, pyth-internal constants and error messages are plain s
 from __future__ import absolute_import
 import string, re, itertools, struct
 
-from pyth import document
-from pyth.format import PythReader
-from pyth.encodings import symbol
+from pygov_br.vendor.pyth import document
+from pygov_br.vendor.pyth.format import PythReader
+from pygov_br.vendor.pyth.encodings import symbol
 import six
 
 _CONTROLCHARS = b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-*'
@@ -66,9 +66,9 @@ _CODEPAGES = {
 
 # All the ones named by number in my 2.6 encodings dir, and those listed above
 _CODEPAGES_BY_NUMBER = dict(
-    (x, "cp%s" % x) for x in (37, 424, 437, 500, 737, 775, 850, 852, 855, 856, 
+    (x, "cp%s" % x) for x in (37, 424, 437, 500, 737, 775, 850, 852, 855, 856,
                               857, 860, 861, 862, 863, 864, 865, 866, 869, 874,
-                              875, 932, 936, 949, 950, 1006, 1026, 1140, 1250, 
+                              875, 932, 936, 949, 950, 1006, 1026, 1140, 1250,
                               1251, 1252, 1253, 1254, 1255, 1256, 1257, 1258, 1361))
 
 # Miscellaneous, incomplete
@@ -105,7 +105,7 @@ class Rtf15Reader(PythReader):
         self.source.seek(0)
 
         if self.source.read(5) != br"{\rtf":
-            from pyth.errors import WrongFileType
+            from pygov_br.vendor.pyth.errors import WrongFileType
             raise WrongFileType("Doesn't look like an RTF file")
 
         self.source.seek(0)
@@ -234,7 +234,7 @@ class DocBuilder(object):
     def flushRun(self):
         if self.block is None:
             self.block = document.Paragraph()
-        
+
         if self.isImage:
             self.block.content.append(
                 document.Image(self.propStack[-1].copy(),
@@ -338,7 +338,7 @@ class DocBuilder(object):
                 self.listStack[-1].append(l)
 
         self.block = None
-    
+
     def handle_Pict(self, pict):
         self.flushRun()
         self.isImage = True
@@ -371,7 +371,7 @@ class DocBuilder(object):
                 del self.propStack[-1][marker.name]
             else:
                 self.propStack[-1][marker.name] = True
-    
+
 
 
 class Group(object):
@@ -415,7 +415,7 @@ class Group(object):
         if control == b'*':
             self.destination = True
             return
-        
+
         if self.image and control in [b'emfblip', b'pngblip', b'jpegblip', b'macpict', b'pmmetafile', b'wmetafile',
                                       b'dibitmap', b'wbitmap', b'wbmbitspixel', b'wbmplanes', b'wbmwidthbytes',
                                       b'picw', b'pich', b'picwgoal', b'pichgoal', b'picscalex', b'picscaley',
@@ -669,7 +669,7 @@ class Group(object):
 
     def handle_trowd(self):
         self.content.append(u'\n')
-        
+
     #Handle the image tag
     def handle_pict(self):
         p = Pict()
@@ -677,7 +677,7 @@ class Group(object):
         self.image = p
         #Remove the destination control group of the parent, so that the image is preserved
         self.parent.destination = False
-    
+
     def handle_field(self):
         def finalize():
             if len(self.content) != 2:
@@ -764,7 +764,7 @@ class Pict(ImageMarker):
 
     def __repr__(self):
         return "!Image!"
-            
+
 class Para(ReadableMarker):
     listLevel = None
 

@@ -3,8 +3,8 @@ Write Pyth documents straight in Python, a la Nevow's Stan.
 """
 from __future__ import absolute_import
 
-from pyth.format import PythReader
-from pyth.document import *
+from pygov_br.vendor.pyth.format import PythReader
+from pygov_br.vendor.pyth.document import *
 import six
 
 
@@ -30,8 +30,8 @@ class _Shortcut(object):
 
     def asDict(self):
         return dict(((self.key, True),))
-        
-    
+
+
 BOLD = _Shortcut("bold")
 ITALIC = _Shortcut("italic")
 UNDERLINE = _Shortcut("underline")
@@ -44,15 +44,15 @@ def _MetaPythonBase():
     Return a metaclass which implements __getitem__,
     allowing e.g. P[...] instead of P()[...]
     """
-    
+
     class MagicGetItem(type):
         def __new__(mcs, name, bases, dict):
             klass = type.__new__(mcs, name, bases, dict)
             mcs.__getitem__ = lambda _, k: klass()[k]
             return klass
-            
+
     return MagicGetItem
-        
+
 
 
 class _PythonBase(object):
@@ -63,7 +63,7 @@ class _PythonBase(object):
 
     def __init__(self, *shortcuts, **properties):
         self.properties = properties.copy()
-        
+
         for shortcut in shortcuts:
             self.properties.update(shortcut.asDict())
 
@@ -85,7 +85,7 @@ class _PythonBase(object):
             self.content.append(item)
 
         return self
-    
+
 
     def __str__(self):
         return "%s(%s) [ %s ]" % (

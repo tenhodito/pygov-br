@@ -3,8 +3,8 @@ Render documents as reStructuredText.
 """
 from __future__ import absolute_import
 
-from pyth import document
-from pyth.format import PythWriter
+from pygov_br.vendor.pyth import document
+from pygov_br.vendor.pyth.format import PythWriter
 
 from cStringIO import StringIO
 
