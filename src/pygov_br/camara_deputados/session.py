@@ -130,12 +130,15 @@ class SessionClient(Client):
         return self._safe(xml_dict)
 
     def _extract_text_from_rtf(self, rtf_text):
-        temp_file = TemporaryFile()
-        temp_file.write(rtf_text)
-        doc = Rtf15Reader.read(temp_file)
-        html = XHTMLWriter.write(doc, pretty=True).read()
-        cleantext = BeautifulSoup(html, "html.parser").text.strip()
-        return cleantext
+        try:
+            temp_file = TemporaryFile()
+            temp_file.write(rtf_text)
+            doc = Rtf15Reader.read(temp_file)
+            html = XHTMLWriter.write(doc, pretty=True).read()
+            cleantext = BeautifulSoup(html, "html.parser").text.strip()
+            return cleantext
+        except (UnicodeDecodeError, TypeError):
+            return None
 
     def frequency(self, session_date, legislature='', deputy_enrollment_id='',
                   party_initials='', region=''):

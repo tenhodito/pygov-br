@@ -629,18 +629,18 @@ class Group(object):
             pass
 
 
-    def handle_up(self, amount):
+    def handle_up(self, amount=None):
         self.content.append(ReadableMarker("super", True))
 
-    def handle_super(self, amount):
+    def handle_super(self, amount=None):
         self.content.append(ReadableMarker("super", True))
 
     #Turns off superscripting or subscripting
-    def handle_nosupersub(self, amount):
+    def handle_nosupersub(self, amount=None):
         self.content.append(ReadableMarker("sub", False))
         self.content.append(ReadableMarker("super", False))
 
-    def handle_dn(self, amount):
+    def handle_dn(self, amount=None):
         self.content.append(ReadableMarker("sub", True))
 
     def handle_sub(self):

@@ -4,6 +4,7 @@ from xml.etree.ElementTree import fromstring, ElementTree
 from pygov_br.exceptions import ClientError, ClientServerError
 from datetime import datetime
 from inspect import isclass
+import pytz
 import logging
 import requests
 import sys
@@ -169,6 +170,8 @@ class Client(object):
         for date_format in date_formats.keys():
             try:
                 final_value = datetime.strptime(string, date_format)
+                tz = pytz.timezone('America/Sao_Paulo')
+                final_value = tz.localize(final_value)
                 if date_formats[date_format]:
                     get_date_type = getattr(final_value,
                                             date_formats[date_format])
