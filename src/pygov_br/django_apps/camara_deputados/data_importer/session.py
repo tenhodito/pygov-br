@@ -63,7 +63,6 @@ class SpeechImporter(BaseDataImporter):
             speeches_list += speeches
         return speeches_list
 
-
     def get_model(self):
         return models.Speech
 
