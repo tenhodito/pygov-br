@@ -25,6 +25,9 @@ with open(os.path.join(dirname, 'src', project, '__meta__.py'), 'w') as F:
 
 INSTALL_DEPS = [
     'requests>=2.11.1',
+    'beautifulsoup4',
+    'click',
+    'pytz'
 ]
 
 if sys.version_info < (2, 7):

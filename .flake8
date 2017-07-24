@@ -1,0 +1,4 @@
+[flake8]
+exclude =
+  src/pygov_br/vendor/,
+  */migrations/
