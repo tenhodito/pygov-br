@@ -13,7 +13,7 @@ class SessionImporter(BaseDataImporter):
     }
 
     def get_data(self):
-        return cd.sessions.speeches('01/01/2015', '01/04/2015')
+        return cd.sessions.speeches('15/01/2016', '15/12/2016')
 
     def get_model(self):
         return models.Session
@@ -38,7 +38,7 @@ class SpeechImporter(BaseDataImporter):
     }
 
     def get_data(self):
-        sessions = cd.sessions.speeches('01/01/2015', '01/04/2015')
+        sessions = cd.sessions.speeches('15/01/2016', '15/12/2016')
         speeches_list = []
         for session in sessions:
             session_code = session['codigo']
@@ -54,13 +54,22 @@ class SpeechImporter(BaseDataImporter):
                         }
             else:
                 speeches = phases['discursos']['discurso']
-                for speech in speeches:
+                if isinstance(speeches, list):
+                    for speech in speeches:
+                        speech['codigoSessao'] = session_code
+                        speech['faseSessao'] = {
+                            'codigo': phases['codigo'],
+                            'descricao': phases['descricao']
+                        }
+                    speeches_list += speeches
+                else:
+                    speech = speeches
                     speech['codigoSessao'] = session_code
                     speech['faseSessao'] = {
                         'codigo': phases['codigo'],
                         'descricao': phases['descricao']
                     }
-            speeches_list += speeches
+                    speeches_list.append(speech)
         return speeches_list
 
     def get_model(self):
@@ -85,11 +94,11 @@ class SpeechImporter(BaseDataImporter):
     def clean_order(self, data):
         return data['numero']
 
-    def after_save_object(self, obj):
-        speech = cd.sessions.full_speech(
-            obj.session.code, obj.order,
-            obj.quarter_number, obj.insertion_number
-        )
-        if speech['discurso'] is not None:
-            obj.full_text = speech['discurso']
-            obj.save()
+    # def after_save_object(self, obj):
+    #     speech = cd.sessions.full_speech(
+    #         obj.session.code, obj.order,
+    #         obj.quarter_number, obj.insertion_number
+    #     )
+    #     if speech['discurso'] is not None:
+    #         obj.full_text = speech['discurso']
+    #         obj.save()

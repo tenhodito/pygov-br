@@ -15,6 +15,12 @@ class PartyImporter(BaseDataImporter):
     def get_model(self):
         return models.Party
 
+    def clean_initials(self, data):
+        queryset = models.Party.objects.filter(initials=data)
+        if queryset.exists():
+            return data + '*'
+        return data
+
     def get_data(self):
         return cd.deputies.parties()
 

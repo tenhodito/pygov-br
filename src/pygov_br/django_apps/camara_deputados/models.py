@@ -201,6 +201,54 @@ class Speech(models.Model):
     session = models.ForeignKey('Session', related_name='speeches')
     session_phase = models.ForeignKey('SessionPhase', related_name='speeches')
 
+    @property
+    def text_url(self):
+        url = 'http://www.camara.leg.br/internet/sitaqweb/TextoHTML.asp?' \
+              'etapa={}&nuSessao={}&nuQuarto={}&nuOrador={}&nuInsercao={}&' \
+              'dtHorarioQuarto={}'
+        return url.format(
+            self.session.number,
+            self.session.code,
+            self.quarter_number,
+            self.order,
+            self.insertion_number,
+            self.initial_time.strftime('%H:%M')
+        )
+
     def save(self, *args, **kwargs):
         if self.author is not None:
             super(Speech, self).save(*args, **kwargs)
+
+
+class ProposalType(models.Model):
+
+    class Meta:
+        verbose_name = "Proposal Type"
+        verbose_name_plural = "Proposal Types"
+
+    is_active = models.BooleanField()
+    description = models.CharField(max_length=500)
+    gender = models.CharField(max_length=2)
+    initials = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.description
+
+
+class Proposal(models.Model):
+
+    class Meta:
+        verbose_name = "Proposal"
+        verbose_name_plural = "Proposals"
+
+    year = models.IntegerField()
+    number = models.IntegerField()
+    author = models.ForeignKey(Deputy, blank=True, null=True,
+                               related_name='proposals')
+    submission_date = models.DateField()
+    name = models.CharField(max_length=500)
+    summary = models.TextField(blank=True, null=True)
+    summary_explanation = models.TextField(blank=True, null=True)
+    proposal_type = models.ForeignKey(ProposalType)
+    indexes = models.CharField(max_length=500, blank=True, null=True)
+    link = models.CharField(max_length=500, blank=True, null=True)

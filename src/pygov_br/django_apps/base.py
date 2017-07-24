@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.db import transaction
 import abc
 import click
 
@@ -43,6 +44,7 @@ class BaseDataImporter(object):
         self.after_save_object(obj)
         return obj
 
+    @transaction.atomic
     def _fill_model(self, model_class, data):
         obj_dict = {}
 
@@ -57,6 +59,8 @@ class BaseDataImporter(object):
 
                 obj_dict[field] = cleaned_field
             except KeyError:
+                continue
+            except AttributeError:
                 continue
         obj, created = model_class.objects.get_or_create(**obj_dict)
         return obj
