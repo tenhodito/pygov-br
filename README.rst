@@ -1,3 +1,7 @@
+.. warning::
+
+   This repository is archived. It was part of the Tenho Dito project (2016), which has concluded. Kept for reference.
+
 .. image:: https://travis-ci.org/tenhodito/pygov-br.svg?branch=dev
     :target: https://travis-ci.org/tenhodito/pygov-br
 .. image:: https://landscape.io/github/tenhodito/pygov-br/dev/landscape.svg?style=flat
